@@ -4,14 +4,14 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 // Import database connection
-import connectDB from '../_backend/lib/mongodb.js';
+import connectDB from '../backend/lib/mongodb.js';
 
 // Import routes
-import notesRouter from '../_backend/routes/notes.js';
-import authRouter from '../_backend/routes/auth.js';
+import notesRouter from '../backend/routes/notes.js';
+import authRouter from '../backend/routes/auth.js';
 
 // Import middleware
-import { errorHandler, notFound } from '../_backend/middleware/errorHandler.js';
+import { errorHandler, notFound } from '../backend/middleware/errorHandler.js';
 
 // Load environment variables (optional for Vercel serverless)
 try {
