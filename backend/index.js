@@ -1,8 +1,6 @@
 import express from 'express';
 import serverless from 'serverless-http';
 import cors from 'cors';
-import helmet from 'helmet';
-import morgan from 'morgan';
 import dotenv from 'dotenv';
 
 // Import database connection
@@ -14,7 +12,6 @@ import authRouter from './routes/auth.js';
 
 // Import middleware
 import { errorHandler, notFound } from './middleware/errorHandler.js';
-import { generalLimiter } from './middleware/rateLimiter.js';
 
 // Load environment variables (optional for Vercel serverless)
 try {
@@ -25,21 +22,11 @@ try {
 
 const app = express();
 
-// Security middleware
-app.use(helmet());
-
-// CORS configuration
-app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN || '*',
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-);
-
-// Logging middleware
-app.use(morgan('combined'));
+// CORS configuration - SIMPLE
+app.use(cors({
+  origin: '*',
+  credentials: true,
+}));
 
 // Body parser middleware
 app.use(express.json({ limit: '10mb' }));
@@ -79,41 +66,24 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// Database connection middleware - CHỈ cho routes cần database
-app.use('/api/notes', async (req, res, next) => {
+// Database connection helper
+const ensureDB = async (req, res, next) => {
   try {
     await connectDB();
     next();
   } catch (error) {
     console.error('Database connection failed:', error);
-    res.status(503).json({
+    return res.status(503).json({
       success: false,
       error: 'Database connection failed',
       message: 'Service temporarily unavailable',
     });
   }
-});
+};
 
-app.use('/api/auth', async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (error) {
-    console.error('Database connection failed:', error);
-    res.status(503).json({
-      success: false,
-      error: 'Database connection failed',
-      message: 'Service temporarily unavailable',
-    });
-  }
-});
-
-// Apply general rate limiter to all routes
-app.use('/api', generalLimiter);
-
-// API routes
-app.use('/api/notes', notesRouter);
-app.use('/api/auth', authRouter);
+// API routes - with database middleware
+app.use('/api/notes', ensureDB, notesRouter);
+app.use('/api/auth', ensureDB, authRouter);
 
 // 404 handler
 app.use(notFound);
