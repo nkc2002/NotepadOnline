@@ -1,4 +1,5 @@
 // Vercel Serverless Function - Native Handler
+// Updated: 2025-12-09 - Fixed response format
 export default function handler(req, res) {
   // Enable CORS
   const allowedOrigins = [
