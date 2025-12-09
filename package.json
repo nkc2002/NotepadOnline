@@ -2,18 +2,8 @@
   "name": "notepadonline",
   "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
   "scripts": {
-    "dev": "npm run dev --workspace=frontend",
-    "dev:frontend": "npm run dev --workspace=frontend",
-    "dev:backend": "cd backend && npm run dev",
-    "build": "npm run build --workspace=frontend",
-    "build:frontend": "npm run build --workspace=frontend"
-  },
-  "devDependencies": {
-    "vercel": "^33.0.0"
+    "dev": "echo 'Use npm run dev in frontend or backend folder'",
+    "build": "echo 'Use npm run build in frontend or backend folder'"
   }
 }
