@@ -16,8 +16,12 @@ import authRouter from './routes/auth.js';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
 import { generalLimiter } from './middleware/rateLimiter.js';
 
-// Load environment variables
-dotenv.config();
+// Load environment variables (optional for Vercel serverless)
+try {
+  dotenv.config();
+} catch (e) {
+  // dotenv not needed in Vercel serverless
+}
 
 const app = express();
 
@@ -25,12 +29,14 @@ const app = express();
 app.use(helmet());
 
 // CORS configuration
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || '*',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 
 // Logging middleware
 app.use(morgan('combined'));
@@ -49,7 +55,7 @@ app.use(async (req, res, next) => {
     res.status(503).json({
       success: false,
       error: 'Database connection failed',
-      message: 'Service temporarily unavailable'
+      message: 'Service temporarily unavailable',
     });
   }
 });
@@ -59,24 +65,24 @@ app.use('/api', generalLimiter);
 
 // Health check route
 app.get('/api', (req, res) => {
-  res.json({ 
+  res.json({
     success: true,
     message: 'Welcome to Notepad Online API',
     version: '1.0.0',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
 app.get('/api/health', async (req, res) => {
   const mongoose = await import('mongoose');
   const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
-  
-  res.json({ 
+
+  res.json({
     success: true,
-    status: 'ok', 
+    status: 'ok',
     database: dbStatus,
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
   });
 });
 
@@ -92,4 +98,3 @@ app.use(errorHandler);
 
 // Export serverless handler
 export default serverless(app);
-
