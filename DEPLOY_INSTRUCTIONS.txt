@@ -1,0 +1,71 @@
+=================================================================
+HƯỚNG DẪN DEPLOY BACKEND VÀ FRONTEND LÊN VERCEL
+=================================================================
+
+BƯỚC 1: DEPLOY BACKEND
+-----------------------
+
+1. Vào: https://vercel.com/new
+
+2. Import repository: NotepadOnline
+
+3. Cấu hình:
+   - Project Name: notepad-backend
+   - Root Directory: backend
+   - Build Command: (để trống)
+   - Output Directory: (để trống)
+
+4. Environment Variables (BẮT BUỘC):
+   
+   MONGODB_URI = mongodb+srv://username:password@cluster.mongodb.net/notepad-online?retryWrites=true&w=majority
+   JWT_SECRET = 3f9de804ae9e79b0db13db5bf8d1ac9ebd6a847649c9bd2549515b9e6aa78d324e009b26a7e65b65c995f6b404d8609f778481501ad723366a14640f4f0ccfd1
+   JWT_EXPIRES_IN = 7d
+   REFRESH_TOKEN_EXPIRES_IN = 30d
+   CORS_ORIGIN = *
+   NODE_ENV = production
+
+5. Click Deploy
+
+6. LƯU LẠI URL: https://notepad-backend-xxx.vercel.app
+
+
+BƯỚC 2: DEPLOY FRONTEND
+------------------------
+
+1. Vào: https://vercel.com/new
+
+2. Import repository: NotepadOnline (lần 2)
+
+3. Cấu hình:
+   - Project Name: notepad-frontend
+   - Framework Preset: Vite
+   - Root Directory: frontend
+   - Build Command: npm run build
+   - Output Directory: dist
+
+4. Environment Variables:
+   
+   VITE_API_URL = https://notepad-backend-xxx.vercel.app
+   (Thay bằng URL backend thực tế từ Bước 1)
+
+5. Click Deploy
+
+6. LƯU LẠI URL: https://notepad-frontend-xxx.vercel.app
+
+
+BƯỚC 3: CẬP NHẬT CORS
+----------------------
+
+1. Vào Backend project trên Vercel
+2. Settings > Environment Variables
+3. Sửa CORS_ORIGIN thành URL frontend
+4. Redeploy
+
+
+KIỂM TRA:
+---------
+Backend: https://notepad-backend-xxx.vercel.app/api/health
+Frontend: https://notepad-frontend-xxx.vercel.app
+
+=================================================================
+
