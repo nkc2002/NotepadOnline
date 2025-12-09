@@ -50,10 +50,15 @@ export default function handler(req, res) {
     return res.status(200).json({
       success: true,
       message: 'Public notes endpoint - database not connected yet',
-      notes: [],
-      total: 0,
-      page: 1,
-      limit: 12,
+      data: {
+        notes: [],
+        pagination: {
+          total: 0,
+          page: 1,
+          limit: 12,
+          totalPages: 0,
+        },
+      },
     });
   }
 
