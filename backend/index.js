@@ -45,8 +45,56 @@ app.use(morgan('combined'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Database connection middleware
-app.use(async (req, res, next) => {
+// Health check route - TRƯỚC database middleware để không bị block
+app.get('/api', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Welcome to Notepad Online API',
+    version: '1.0.0',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get('/api/health', async (req, res) => {
+  try {
+    const mongoose = await import('mongoose');
+    const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+
+    res.json({
+      success: true,
+      status: 'ok',
+      database: dbStatus,
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+    });
+  } catch (error) {
+    res.json({
+      success: true,
+      status: 'ok',
+      database: 'disconnected',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      error: error.message,
+    });
+  }
+});
+
+// Database connection middleware - CHỈ cho routes cần database
+app.use('/api/notes', async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error('Database connection failed:', error);
+    res.status(503).json({
+      success: false,
+      error: 'Database connection failed',
+      message: 'Service temporarily unavailable',
+    });
+  }
+});
+
+app.use('/api/auth', async (req, res, next) => {
   try {
     await connectDB();
     next();
@@ -62,29 +110,6 @@ app.use(async (req, res, next) => {
 
 // Apply general rate limiter to all routes
 app.use('/api', generalLimiter);
-
-// Health check route
-app.get('/api', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Welcome to Notepad Online API',
-    version: '1.0.0',
-    timestamp: new Date().toISOString(),
-  });
-});
-
-app.get('/api/health', async (req, res) => {
-  const mongoose = await import('mongoose');
-  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
-
-  res.json({
-    success: true,
-    status: 'ok',
-    database: dbStatus,
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-  });
-});
 
 // API routes
 app.use('/api/notes', notesRouter);
