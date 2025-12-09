@@ -1,9 +1,5 @@
 {
   "name": "notepadonline",
   "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "echo 'Use npm run dev in frontend or backend folder'",
-    "build": "echo 'Use npm run build in frontend or backend folder'"
-  }
+  "private": true
 }
