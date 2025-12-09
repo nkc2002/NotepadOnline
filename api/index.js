@@ -27,7 +27,7 @@ export default function handler(req, res) {
     return res.status(200).json({
       success: true,
       message: 'Welcome to Notepad Online API',
-      version: '2.0.0',
+      version: '2.0.1',
       timestamp: new Date().toISOString(),
       cors: 'enabled',
     });
