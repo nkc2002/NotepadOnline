@@ -1,0 +1,20 @@
+{
+  "name": "notepad-online",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "api"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=frontend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:api": "vercel dev",
+    "build": "npm run build --workspace=frontend",
+    "build:frontend": "npm run build --workspace=frontend"
+  },
+  "devDependencies": {
+    "vercel": "^33.0.0"
+  }
+}
+
