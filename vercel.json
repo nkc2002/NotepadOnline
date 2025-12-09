@@ -1,4 +1,6 @@
 {
+  "buildCommand": "echo 'No build needed'",
+  "installCommand": "cd api && npm install",
   "rewrites": [
     {
       "source": "/api/:path*",
