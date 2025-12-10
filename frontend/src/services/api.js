@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// Updated: 2025-12-10 - Fixed API base URL to include /api prefix
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://notepad-api-beta.vercel.app/api';
 
 // Create axios instance
