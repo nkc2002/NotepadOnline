@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://notepad-api-beta.vercel.app';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://notepad-api-beta.vercel.app/api';
 
 // Create axios instance
 const apiClient = axios.create({
