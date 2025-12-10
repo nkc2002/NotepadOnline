@@ -94,7 +94,7 @@ function NoteEditor() {
 
         if (response.success) {
           alert('Note updated successfully!');
-          navigate(`/share/${response.data.note.shareId || id}`);
+          navigate(`/share/${response.data.note.shareId || id}`, { replace: true });
         }
       } else {
         // Create new note
@@ -112,7 +112,7 @@ function NoteEditor() {
             localStorage.setItem(`editToken_${note.id}`, note.editToken);
           } else {
             // Authenticated user, navigate to dashboard
-            navigate('/dashboard');
+            navigate('/dashboard', { replace: true });
           }
         }
       }
